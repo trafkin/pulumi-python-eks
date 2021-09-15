@@ -1,7 +1,5 @@
 """An AWS Python Pulumi program"""
 import iam
-import vpc
-import utils
 import pulumi
 from pulumi_aws import eks
 import pulumi_aws as aws
