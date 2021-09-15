@@ -1,7 +1,6 @@
 """An AWS Python Pulumi program"""
 import iam
 import pulumi
-from pulumi_aws import eks
 import pulumi_aws as aws
 
 
@@ -9,13 +8,13 @@ import pulumi_aws as aws
 vpc = aws.ec2.get_vpc(id="")
 
 # Create an AWS cluster resource
-eks_cluster = eks.Cluster(
+eks_cluster = aws.eks.Cluster(
     'eks-cluster',
     role_arn=iam.eks_role.arn,
     tags={
         'Name': 'pulumi-eks-cluster',
     },
-    vpc_config=eks.ClusterVpcConfigArgs(
+    vpc_config=aws.eks.ClusterVpcConfigArgs(
         public_access_cidrs=['0.0.0.0/0'],
         security_group_ids=[vpc.eks_security_group.id],
         subnet_ids=[vpc.vpc_subnet.id, vpc.vpc_subnet_two.id],
@@ -32,7 +31,7 @@ load_balancer = aws.lb.LoadBalancer(
 )
 #Creating two nodes inside the cluster, without the args 'instance_types' it will default to 't3.medium'
 #Several of these can be created according to the requirements of the application
-node_group = eks.NodeGroup(
+node_group = aws.eks.NodeGroup(
     'eks-node-group',
     cluster_name=eks_cluster.name,
     node_role_arn=iam.ec2_role.arn,
@@ -40,7 +39,7 @@ node_group = eks.NodeGroup(
     tags={
         'Name': 'pulumi-cluster-nodeGroup',
     },
-    scaling_config=eks.NodeGroupScalingConfigArgs(
+    scaling_config=aws.eks.NodeGroupScalingConfigArgs(
         desired_size=2,
         max_size=2,
         min_size=1,
