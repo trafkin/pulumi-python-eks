@@ -1,4 +1,3 @@
-"""An AWS Python Pulumi program"""
 import iam
 import subnets_filter
 import pulumi
